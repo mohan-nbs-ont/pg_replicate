@@ -19,20 +19,16 @@
 
 ## Testing
 
-The `pg_replicate` repo contains the application itself  - `pg_replicate` - and
-auxiliary programs to test it.
+Applications used for testing
 
-`pg83_setup` is for creating a source (postgres 8.3) database
-`pg14_setup` is for creating a destination (postgres 14) database
+`pg83_setup` - creats a source database (postgres 8.3)
+`pg14_setup` - creats a destination database (postgres 14)
+`pg_insert` - create the 'books' table in both databases
+            - insert data records to source database
 
-`pg_insert`
+### Create and run test source/destination databases
 
-create the 'books' table in both databases
-insert data records to source database
-
-### create and run test source/destination databases
-
-console 1: create and start destination database
+Console 1: Create and start destination database
 
 ```
 cd pg14_setup
@@ -40,7 +36,7 @@ cd pg14_setup
 ./start_db.sh
 ```
 
-console 2: create and start source database
+Console 2: Create and start source database
 
 ```
 cd pg83_setup
@@ -48,10 +44,7 @@ cd pg83_setup
 ./start_db.sh
 ```
 
-### create test table and insert test data into source database
-
-* will insert 10000 records into 'books' table, with a primary
-  key that is an incremental sequence number
+### Create test table and insert test data into source database
 
 ```
 cd pg_insert
@@ -61,6 +54,16 @@ cd pg_insert
 ## running the replicator
 
 ```
+for s in $(seq 1 1000000); do
+  ./pg_insert "a$s" "t$s"
+done
+```
+
+## Test environment has been setup
+
+* Replicate table 'books' from source to destination
+
+```
 cd pg_replicate
-./run
+./pg_replicate books id books id
 ```
