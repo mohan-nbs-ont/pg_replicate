@@ -27,7 +27,7 @@ CGO_ENABLED=0 go build -trimpath -ldflags "-s -w"
 
 ```
 SRC_DB_URL=postgres://testdb_owner:welcome@127.0.0.83:5432/testdb?sslmode=disable
-DST_DB_URL=postgres://testdb_owner:welcome@127.0.0.12:5432/testdb?sslmode=disable
+DST_DB_URL=postgres://testdb_owner:welcome@127.0.0.14:5432/testdb?sslmode=disable
 export SRC_DB_URL
 export DST_DB_URL
 ```
