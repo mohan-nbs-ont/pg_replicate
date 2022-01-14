@@ -21,9 +21,9 @@
 
 Applications used for testing
 
-`pg83_setup` - creats a source database (postgres 8.3)
-`pg14_setup` - creats a destination database (postgres 14)
-`pg_insert` - create the 'books' table in both databases
+`test_setup/pg83_setup` - creats a source database (postgres 8.3)
+`test_setup/pg14_setup` - creats a destination database (postgres 14)
+`test_setup/pg_insert` - create the 'books' table in both databases
             - insert data records to source database
 
 ### Create and run test source/destination databases
@@ -31,7 +31,7 @@ Applications used for testing
 Console 1: Create and start destination database
 
 ```
-cd pg14_setup
+cd test_setup/pg14_setup
 ./create_db.sh
 ./start_db.sh
 ```
@@ -39,7 +39,7 @@ cd pg14_setup
 Console 2: Create and start source database
 
 ```
-cd pg83_setup
+cd test_setup/pg83_setup
 ./create_db.sh
 ./start_db.sh
 ```
@@ -47,21 +47,22 @@ cd pg83_setup
 ### Create test table and insert test data into source database
 
 ```
-cd pg_insert
-./run-this-to-create-and-load-source-table.sh
+cd test_setup/pg_insert
 ```
 
-## running the replicator
+Follow instructions in README.md
+
+* Insert 10000 records into table in source database
 
 ```
-for s in $(seq 1 1000000); do
+for s in $(seq 1 10000); do
   ./pg_insert "a$s" "t$s"
 done
 ```
 
-## Test environment has been setup
+## Run replication program
 
-* Replicate table 'books' from source to destination
+* Replicate table 'books' from source (now having 10000) records to destination
 
 ```
 cd pg_replicate
