@@ -1,4 +1,4 @@
-module pgx_insert
+module pg_insert
 
 go 1.17
 

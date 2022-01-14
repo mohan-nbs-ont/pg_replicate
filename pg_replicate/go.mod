@@ -1,4 +1,4 @@
-module pg_go_replicate
+module pg_replicate
 
 go 1.17
 

@@ -1,25 +1,29 @@
-# Replicate table between src and dst tables using tx id(unique sequence)
+# Replicate a table between source and destination databases
 
-* tables should have a unique sequence id (int) value that can be used to replicate
-  tuples to another database/table.
-* batches of data is extracted from the source database and inserted into
+* Source table should have a unique sequence id (int) value that can be used to replicate
+  data to a destination database/table.
+* Batches of data is extracted from the source database and inserted into
   destination database
-* batches use go routines so they are independent of each other
+* Uses go routines per batch so they are independent of each other
 
-* details are in
+* Details:
 
 `RFC_2021_01_04_Copy_large_tables_from_billing_database`
 
+## To build
+
 ```
-mv pg_go_replicate.go main.go
-go mod init pg_go_replicate
+go mod init pg_replicate
 go mod tidy
 
-go build
-./pg_go_replicate
+go fmt
+CGO_ENABLED=0 go build -trimpath -ldflags "-s -w"
 ```
 
-* use env variable
+## Setup
+
+* Create and export environment variable for the database
+* Used by the application
 
 ```
 SRC_DB_URL=postgres://testdb_owner:welcome@127.0.0.83:5432/testdb?sslmode=disable
@@ -28,13 +32,25 @@ export SRC_DB_URL
 export DST_DB_URL
 ```
 
-* run
+## Running
+
+* Specify the source table/key and destination table/key
 
 ```
-usage: ./pg_go_replicate src-table-to-replicate src-table-numeric-id dst-table-to-replicate dst-table-numeric-id
+usage: ./pg_replicate src-table-to-replicate src-table-numeric-id dst-table-to-replicate dst-table-numeric-id
 
 example:
-./pg_go_replicate books id books id
+./pg_replicate books id books id
+```
+
+* Details of table with unique key (sequence number)
+
+```
+DROP SEQUENCE books_sequence;
+DROP TABLE books;
+CREATE TABLE books (id SERIAL PRIMARY KEY, title VARCHAR(100) UNIQUE NOT NULL, primary_author VARCHAR(100) UNIQUE NOT NULL);
+CREATE SEQUENCE books_sequence start 1 increment 1;
+EOF
 ```
 
 ## References

@@ -13,7 +13,6 @@ import (
 )
 
 func read_src_write_dst(src_query, dst_query string) {
-	// see env variables: . env_pg_go_replicate.sh
 	src_db, src_err := pg.ParseURL(os.Getenv("SRC_DB_URL"))
 	if src_err != nil {
 		panic(src_err)
