@@ -19,6 +19,13 @@
 
 ## testing
 
+the `pg_replicate` repo contains the application itself  - `pg_replicate` - and
+auxiliary programs to test it.
+those are creating a source (postgres 8.3) database and destination (postgres 14)
+database, the `pg_insert` program will create a table to test - books - which will
+insert 10000 records that will  be replicated by `pg_replicate` between postgres
+source 8.3 and destination 14
+
 ### create and run test source/destination databases
 
 console 1: create and start destination database
