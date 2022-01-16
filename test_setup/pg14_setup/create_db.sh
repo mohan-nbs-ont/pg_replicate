@@ -33,7 +33,7 @@ cat >"${PGDATA}/postgresql.conf" <<EOF
 data_directory = '${PGDATA}'
 hba_file = '${PGDATA}/pg_hba.conf'
 ident_file = '${PGDATA}/pg_ident.conf'
-listen_addresses = '127.0.0.12'
+listen_addresses = '127.0.0.14'
 max_connections = 300
 unix_socket_directories = '${PGDATA}'
 shared_buffers = 128MB

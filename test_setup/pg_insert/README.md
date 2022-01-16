@@ -51,7 +51,7 @@ export DST_DB_URL
 * Insert data using the program into the source database
 
 ```
-for s in $(seq 1 1000000); do
+for s in $(seq 1 10000); do
   ./pg_insert "a$s" "t$s"
 done
 ```
