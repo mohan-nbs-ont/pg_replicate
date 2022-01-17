@@ -11,9 +11,11 @@
 
 ```
 create_db.sh - initialize and create a postgresql 14 database in $PWD/data/
-install_db.sh - download, extract, install pre-requisites, pg14 to $HOME/database/14
 login_db.sh - login as superuser to database that was started above
 start_db.sh - start the database created in $PWD/data/ (PGDATA = $PWD/data/tmp/data)
+
+install_db.sh - download, extract, install pre-requisites, postgresql 14 from source
+                to $HOME/database/14
 ```
 
 ## Install via postgresql apt

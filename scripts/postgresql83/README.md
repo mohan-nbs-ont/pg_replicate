@@ -10,10 +10,11 @@
 ```
 
 ```
-create_db.sh - initialize and create a pg83 database in $PWD/data/
-install_db.sh - download, extract, install pre-requisites, pg83 to $HOME/database/83
+create_db.sh - initialize and create a postgresql 8.3 database in $PWD/data/
 login_db.sh - login as superuser to database that was started above
 start_db.sh - start the database created in $PWD/data/ (PGDATA = $PWD/data/tmp/data)
+
+install_db.sh - download, extract, install pre-requisites, postgresql 8.3 to $HOME/database/83
 ```
 
 ## Install via postgresql apt

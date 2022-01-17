@@ -1,19 +1,19 @@
 #! /bin/bash
+## NOTE: This script will delete old $PGDATA - $PWD/data
 set -o errexit
 set -o nounset
 set -o pipefail
 
-export PATH="/usr/lib/postgresql/14/bin:$PATH"
+export PATH="/usr/lib/postgresql/8.3/bin:$PATH"
 export BASE="$PWD/database"
 
 rm -rf "${BASE}"
 mkdir -p "${BASE}"
 
-export PGDATA="${BASE}/14"
+export PGDATA="${BASE}/83"
 export PGHOST="${PGDATA}"
 
 DBSUPER=$(id -n -u)
-DBUSER=$DBSUPER
 DBNAME="testdb"
 
 sockwait() {
@@ -23,29 +23,32 @@ sockwait() {
     grep -E -m 1 ":$2\b"
 }
 
-mkdir -p "${PGDATA}"
-chmod 0700 "${PGDATA}"
+rm -rf "${BASE}"
+mkdir -p "${BASE}/data"
+chmod 0700 "${BASE}/data"
 
 export TZ="America/Toronto"
-initdb --encoding=UTF8 --locale=en_CA.UTF-8 >/dev/null
+initdb --encoding=UTF8 >/dev/null
 
 cat >"${PGDATA}/postgresql.conf" <<EOF
+# https://www.postgresql.org/docs/8.3/runtime-config-connection.html
 data_directory = '${PGDATA}'
 hba_file = '${PGDATA}/pg_hba.conf'
 ident_file = '${PGDATA}/pg_ident.conf'
-listen_addresses = '127.0.0.14'
+listen_addresses = '127.0.0.83'
 max_connections = 300
-unix_socket_directories = '${PGDATA}'
+unix_socket_directory = '${PGDATA}'
 shared_buffers = 128MB
 log_line_prefix = '%t %d %u %v '
 log_statement = 'all'
 log_connections = 'yes'
 log_disconnections = 'yes'
+
+#ssl = on
 EOF
 
 cat >"${PGDATA}/pg_hba.conf" <<EOF
 local   all         all                               trust
-host    billing all 127.0.0.0/24 md5
 host    all ${DBSUPER} 127.0.0.0/24 trust
 host    ${DBNAME} all 127.0.0.0/24 md5
 EOF
@@ -53,14 +56,11 @@ EOF
 pg_ctl start -D "${PGDATA}" -s
 sockwait 5 5432
 
-createuser --host="${PGDATA}" --username="${DBSUPER}" --no-password --login \
-  --superuser postgres
+createuser --host="${PGDATA}" --username="${DBSUPER}" --login --superuser postgres
 createdb --host="${PGDATA}" --username="${DBSUPER}" --encoding=UTF8 --owner="${DBSUPER}" \
-  --template=template0 --locale=en_CA.UTF-8 "${DBNAME}"
+   --template=template0 "${DBNAME}"
 
 psql -h "${PGDATA}" -d postgres -f create_role.sql
-#psql -h "${PGDATA}" -d postgres -f create_roles.sql
-#psql -h "${PGDATA}" -d billing -f billing_schema.sql -U billing_owner
 
 pg_ctl stop -W -D "${PGDATA}" -s -m immediate -W
 rm -f "${PGDATA}/.s.PGSQL.5432.*" "${PGDATA}/postmaster.pid"

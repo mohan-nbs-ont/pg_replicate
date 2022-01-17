@@ -1,0 +1,5 @@
+_*
+*.swp
+*.swo
+*.pem
+pg_replicate

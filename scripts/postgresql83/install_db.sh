@@ -3,22 +3,22 @@ set -o pipefail
 set -o errexit
 set -o nounset
 
-# download and install postgresql 14
+# download and install postgresql 8.3
 # https://www.postgresql.org/ftp/source/
-# wget https://ftp.postgresql.org/pub/source/v14rc1/postgresql-14rc1.tar.gz
+# wget https://ftp.postgresql.org/pub/source/v8.3.23/postgresql-8.3.23.tar.gz
 
 # pre-requisites
 sudo apt-get install -y build-essential libreadline-dev zlib1g-dev \
   flex bison libxml2-dev libxslt-dev libssl-dev clang
 
 mkdir -p "$HOME/database"
-rm -rf "$HOME/database/14"
+rm -rf "$HOME/database/83"
 
-rm -rf postgresql-14rc1
-tar xzf postgresql-14rc1.tar.gz
+rm -rf postgresql-8.3.23
+tar xzf postgresql-8.3.23.tar.gz
 
-cd postgresql-14rc1
-./configure --prefix="$HOME/database/14" --with-openssl CFLAGS="-O1" CC=clang
+cd postgresql-8.3.23
+./configure --prefix="$HOME/database/83" CFLAGS="-O1" CC=clang
 make
 make install
 
@@ -40,4 +40,3 @@ cp -fp server.crt /tmp
 cp -fp server.key /tmp
 cp -fp root.crt /tmp
 cp -fp root.key /tmp
-
